@@ -18,6 +18,10 @@ public class RegexTransformer extends Transformer {
     private Map<Pattern, String> regexMap = new HashMap<Pattern, String>();
     private String column;
     
+    /**
+     * @param column    Name of the column needed to be transformed.
+     * @param regexMap  Map containing the regexes and the values.
+     */
     RegexTransformer(String column, Map<String, String> regexMap) {
         this.column = column;
         for (String regexString : regexMap.keySet()) {
