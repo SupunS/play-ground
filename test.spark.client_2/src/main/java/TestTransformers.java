@@ -64,13 +64,16 @@ public class TestTransformers {
         
         RegexTransformer rt = new RegexTransformer("Description", regexMap);
         DataFrame transformedDF =  rt.transform(dataFrame);
+        
+        long endTime = System.currentTimeMillis();
+        
         transformedDF.show(200);
         
 /*        Thread.sleep(5000);
         dataFrame.rdd();
         Thread.sleep(5000);*/
         
-        long endTime = System.currentTimeMillis();
+        
 
         System.out.println("Elapsed milliseconds: " + (endTime - startTime)/1000.0);
     }
