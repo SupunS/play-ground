@@ -27,7 +27,6 @@ public class RegexTransformer extends Transformer {
         for (String regexString : regexMap.keySet()) {
             this.regexMap.put(Pattern.compile(regexString), regexMap.get(regexString));
         }
-        
     }
     
     @Override

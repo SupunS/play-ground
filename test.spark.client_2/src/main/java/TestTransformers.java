@@ -38,6 +38,7 @@ public class TestTransformers {
         DataFrame dataFrame = sqlContext.read().format("com.databricks.spark.csv")
                                                 .option("inferSchema", "true")
                                                 .option("header", "true")
+                                                //.option("delimiter", "\t")
                                                 .load("/home/supun/Supun/data/train.csv");
         
         Map<String, String> regexMap = new LinkedHashMap<String, String>();
