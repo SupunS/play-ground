@@ -1,0 +1,288 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.wso2.test:wso2event.publisher:jar:0.0.1-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ line 101, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.felix:maven-scr-plugin is missing. @ line 110, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.felix:maven-bundle-plugin is missing. @ line 114, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building wso2event.publisher 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.1:tree (default-cli) @ wso2event.publisher ---
+[INFO] org.wso2.test:wso2event.publisher:jar:0.0.1-SNAPSHOT
+[INFO] +- commons-logging:commons-logging:jar:1.2:compile
+[INFO] +- commons-pool:commons-pool:jar:1.6:compile
+[INFO] +- org.apache.thrift:libthrift:jar:0.9.3:compile
+[INFO] |  +- org.apache.httpcomponents:httpclient:jar:4.4.1:compile
+[INFO] |  |  \- commons-codec:commons-codec:jar:1.9:compile
+[INFO] |  \- org.apache.httpcomponents:httpcore:jar:4.4.1:compile
+[INFO] +- com.google.code.gson:gson:jar:2.6.1:compile
+[INFO] +- log4j:log4j:jar:1.2.17:compile
+[INFO] +- org.apache.commons:commons-lang3:jar:3.4:compile
+[INFO] +- org.wso2.carbon.analytics-common:org.wso2.carbon.databridge.agent:jar:5.0.12-SNAPSHOT:compile
+[INFO] |  +- org.eclipse.osgi:org.eclipse.osgi:jar:3.7.0.v20110613:compile
+[INFO] |  +- org.eclipse.osgi:org.eclipse.osgi.services:jar:3.3.100.v20120522-1822:compile
+[INFO] |  +- org.wso2.carbon.analytics-common:org.wso2.carbon.databridge.commons:jar:5.0.12-SNAPSHOT:compile
+[INFO] |  |  +- org.wso2.carbon:org.wso2.carbon.logging:jar:4.4.2:compile
+[INFO] |  |  |  +- org.apache.log4j.wso2:log4j:jar:1.2.17.wso2v1:compile
+[INFO] |  |  |  \- org.wso2.carbon:org.wso2.carbon.bootstrap:jar:4.4.2:compile
+[INFO] |  |  |     \- wrapper:wrapper:jar:3.2.3:compile
+[INFO] |  |  \- org.json.wso2:json:jar:2.0.0.wso2v1:compile
+[INFO] |  +- org.wso2.carbon.analytics-common:org.wso2.carbon.databridge.commons.thrift:jar:5.0.12-SNAPSHOT:compile
+[INFO] |  |  \- libthrift.wso2:libthrift:jar:0.9.2.wso2v1:compile
+[INFO] |  +- org.wso2.carbon:org.wso2.carbon.core:jar:4.4.2:compile
+[INFO] |  |  +- org.wso2.orbit.com.hazelcast:hazelcast:jar:3.5.2.wso2v1:compile
+[INFO] |  |  |  \- com.hazelcast:hazelcast-all:jar:3.5.2:compile
+[INFO] |  |  +- org.eclipse.equinox:org.eclipse.equinox.http.helper:jar:1.1.0.wso2v1:compile
+[INFO] |  |  |  \- org.eclipse.equinox:javax.servlet:jar:3.0.0.v201112011016:compile
+[INFO] |  |  +- org.bouncycastle.wso2:bcprov-jdk15on:jar:1.49.0.wso2v2:compile
+[INFO] |  |  |  \- org.bouncycastle:bcprov-jdk15on:jar:1.49:compile
+[INFO] |  |  +- org.wso2.carbon:javax.cache.wso2:jar:4.4.2:compile
+[INFO] |  |  |  +- org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1:compile
+[INFO] |  |  |  \- org.wso2.carbon:org.wso2.carbon.base:jar:4.4.2:compile
+[INFO] |  |  +- org.wso2.carbon:org.wso2.carbon.registry.core:jar:4.4.2:compile
+[INFO] |  |  |  +- commons-io.wso2:commons-io:jar:2.0.0.wso2v2:compile
+[INFO] |  |  |  +- net.sourceforge.findbugs:annotations:jar:1.3.2:compile
+[INFO] |  |  |  +- org.apache.ws.commons.schema.wso2:XmlSchema:jar:1.4.7.wso2v3:compile
+[INFO] |  |  |  +- org.wso2.carbon:org.wso2.carbon.registry.api:jar:4.4.2:compile
+[INFO] |  |  |  +- org.wso2.carbon:org.wso2.carbon.registry.xboot:jar:4.4.2:compile
+[INFO] |  |  |  +- org.wso2.securevault:org.wso2.securevault:jar:1.0.0-wso2v2:compile
+[INFO] |  |  |  |  +- org.apache.ws.commons.axiom:axiom-impl:jar:1.2.11:compile
+[INFO] |  |  |  |  |  \- org.codehaus.woodstox:wstx-asl:jar:3.2.9:compile
+[INFO] |  |  |  |  +- jline:jline:jar:0.9.94:compile
+[INFO] |  |  |  |  +- commons-cli:commons-cli:jar:1.0:compile
+[INFO] |  |  |  |  \- commons-io:commons-io:jar:2.0:compile
+[INFO] |  |  |  +- org.compass-project.wso2:compass:jar:2.0.1.wso2v2:compile
+[INFO] |  |  |  +- org.apache.abdera.wso2:abdera:jar:1.0.0.wso2v3:compile
+[INFO] |  |  |  +- org.apache.tomcat.wso2:jdbc-pool:jar:7.0.34.wso2v2:compile
+[INFO] |  |  |  +- org.apache.poi.wso2:poi-scratchpad:jar:3.9.0.wso2v1:compile
+[INFO] |  |  |  |  \- org.apache.poi:poi-scratchpad:jar:3.9:compile
+[INFO] |  |  |  |     \- org.apache.poi:poi:jar:3.9:compile
+[INFO] |  |  |  \- commons-httpclient.wso2:commons-httpclient:jar:3.1.0.wso2v2:compile
+[INFO] |  |  |     \- org.apache.commons.ssl:not-yet-commons-ssl:jar:0.3.9:compile
+[INFO] |  |  +- org.wso2.carbon:org.wso2.carbon.user.core:jar:4.4.2:compile
+[INFO] |  |  |  +- org.wso2.carbon:org.wso2.carbon.user.api:jar:4.4.2:compile
+[INFO] |  |  |  +- xerces.wso2:xercesImpl:jar:2.8.1.wso2v2:compile
+[INFO] |  |  |  \- commons-dbcp.wso2:commons-dbcp:jar:1.4.0.wso2v1:compile
+[INFO] |  |  +- org.wso2.carbon:org.wso2.carbon.utils:jar:4.4.2:compile
+[INFO] |  |  |  +- org.wso2.carbon:org.wso2.carbon.queuing:jar:4.4.2:compile
+[INFO] |  |  |  +- org.igniterealtime.smack.wso2:smack:jar:3.0.4.wso2v1:compile
+[INFO] |  |  |  +- org.igniterealtime.smack.wso2:smackx:jar:3.0.4.wso2v1:compile
+[INFO] |  |  |  +- jaxen:jaxen:jar:1.1.1:compile
+[INFO] |  |  |  |  +- dom4j:dom4j:jar:1.6.1:compile
+[INFO] |  |  |  |  +- jdom:jdom:jar:1.0:compile
+[INFO] |  |  |  |  \- xom:xom:jar:1.0:compile
+[INFO] |  |  |  |     +- xerces:xmlParserAPIs:jar:2.6.2:compile
+[INFO] |  |  |  |     +- xalan:xalan:jar:2.6.0:compile
+[INFO] |  |  |  |     \- com.ibm.icu:icu4j:jar:2.6.1:compile
+[INFO] |  |  |  +- commons-fileupload.wso2:commons-fileupload:jar:1.2.2.wso2v1:compile
+[INFO] |  |  |  |  \- commons-fileupload:commons-fileupload:jar:1.2.2:compile
+[INFO] |  |  |  \- org.apache.ant.wso2:ant:jar:1.7.0.wso2v1:compile
+[INFO] |  |  |     \- org.apache.ant:ant:jar:1.7.0:compile
+[INFO] |  |  |        \- org.apache.ant:ant-launcher:jar:1.7.0:compile
+[INFO] |  |  +- commons-collections.wso2:commons-collections:jar:3.2.0.wso2v1:compile
+[INFO] |  |  +- org.apache.axis2.wso2:axis2:jar:1.6.1.wso2v15:compile
+[INFO] |  |  +- org.apache.neethi.wso2:neethi:jar:2.0.4.wso2v4:compile
+[INFO] |  |  +- org.apache.httpcomponents.wso2:httpcore:jar:4.3.3.wso2v1:compile
+[INFO] |  |  +- org.apache.tomcat:tomcat-catalina-ha:jar:7.0.59:compile
+[INFO] |  |  |  +- org.apache.tomcat:tomcat-juli:jar:7.0.59:compile
+[INFO] |  |  |  +- org.apache.tomcat:tomcat-tribes:jar:7.0.59:compile
+[INFO] |  |  |  +- org.apache.tomcat:tomcat-catalina:jar:7.0.59:compile
+[INFO] |  |  |  |  +- org.apache.tomcat:tomcat-annotations-api:jar:7.0.59:compile
+[INFO] |  |  |  |  \- org.apache.tomcat:tomcat-api:jar:7.0.59:compile
+[INFO] |  |  |  \- org.apache.tomcat:tomcat-util:jar:7.0.59:compile
+[INFO] |  |  \- wsdl4j.wso2:wsdl4j:jar:1.6.2.wso2v4:compile
+[INFO] |  +- commons-pool.wso2:commons-pool:jar:1.5.6.wso2v1:compile
+[INFO] |  +- org.wso2.orbit.org.apache.httpcomponents:httpclient:jar:4.3.1.wso2v2:compile
+[INFO] |  +- org.wso2.orbit.com.lmax:disruptor:jar:3.3.2.wso2v2:compile
+[INFO] |  \- org.wso2.carbon.analytics-common:org.wso2.carbon.databridge.commons.binary:jar:5.0.12-SNAPSHOT:compile
+[INFO] +- org.wso2.orbit.com.esotericsoftware.kryo:kryo:jar:2.24.0.wso2v1:compile
+[INFO] |  +- org.objenesis:objenesis:jar:2.1:compile
+[INFO] |  \- com.esotericsoftware.minlog:minlog:jar:1.2:compile
+[INFO] \- org.wso2.carbon.analytics:org.wso2.carbon.analytics.spark.core:jar:1.0.6-SNAPSHOT:compile
+[INFO]    +- org.wso2.carbon.commons:org.wso2.carbon.ntask.core:jar:4.4.8:compile
+[INFO]    |  +- org.wso2.carbon.commons:org.wso2.carbon.ntask.common:jar:4.4.8:compile
+[INFO]    |  +- org.wso2.carbon.commons:org.wso2.carbon.remote-tasks.stub:jar:4.4.8:compile
+[INFO]    |  |  +- org.apache.axis2.wso2:axis2-client:jar:1.6.1.wso2v14:compile
+[INFO]    |  |  |  +- org.apache.geronimo.specs.wso2:geronimo-stax-api_1.0_spec:jar:1.0.1.wso2v1:compile
+[INFO]    |  |  |  +- org.apache.axis2.wso2:axis2-json:jar:1.6.1.wso2v14:compile
+[INFO]    |  |  |  +- org.apache.woden.wso2:woden:jar:1.0.0.M8-wso2v1:compile
+[INFO]    |  |  |  \- commons-codec.wso2:commons-codec:jar:1.3.0.wso2v1:compile
+[INFO]    |  |  +- org.apache.ws.commons.axiom.wso2:axiom:jar:1.2.11.wso2v6:compile
+[INFO]    |  |  |  +- org.codehaus.woodstox:woodstox-core-asl:jar:4.2.0:compile
+[INFO]    |  |  |  \- org.codehaus.woodstox:stax2-api:jar:3.1.1:compile
+[INFO]    |  |  |     \- javax.xml.stream:stax-api:jar:1.0-2:compile
+[INFO]    |  |  \- org.apache.ws.commons.axiom:axiom-api:jar:1.2.11-wso2v6:compile
+[INFO]    |  |     +- org.apache.geronimo.specs:geronimo-activation_1.1_spec:jar:1.0.2:compile
+[INFO]    |  |     +- org.apache.geronimo.specs:geronimo-javamail_1.4_spec:jar:1.6:compile
+[INFO]    |  |     \- org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:jar:1.0.1:compile
+[INFO]    |  \- org.quartz-scheduler.wso2:quartz:jar:2.1.1.wso2v1:compile
+[INFO]    |     \- org.quartz-scheduler:quartz:jar:2.1.1:compile
+[INFO]    |        \- c3p0:c3p0:jar:0.9.1.1:compile
+[INFO]    +- org.wso2.carbon:org.wso2.carbon.application.deployer:jar:4.4.3:compile
+[INFO]    |  +- org.wso2.carbon:org.wso2.carbon.feature.mgt.core:jar:4.4.3:compile
+[INFO]    |  |  +- org.eclipse.equinox:org.eclipse.equinox.p2.artifact.repository:jar:1.1.100.v20110519:compile
+[INFO]    |  |  +- org.eclipse.equinox:org.eclipse.equinox.common:jar:3.6.200.v20130402-1505:compile
+[INFO]    |  |  +- org.eclipse.equinox:org.eclipse.equinox.p2.core:jar:2.3.0.v20130327-2119:compile
+[INFO]    |  |  +- org.eclipse.equinox:org.eclipse.equinox.p2.director:jar:2.3.0.v20130526-0335:compile
+[INFO]    |  |  +- org.eclipse.equinox:org.eclipse.equinox.p2.engine:jar:2.3.0.v20130526-2122-wso2v1:compile
+[INFO]    |  |  |  +- org.eclipse.core:org.eclipse.core.jobs:jar:3.5.300.v20130429-1813:compile
+[INFO]    |  |  |  +- org.eclipse.core:org.eclipse.core.runtime:jar:3.9.0.v20130326-1255:compile
+[INFO]    |  |  |  +- org.eclipse.equinox:org.eclipse.equinox.util:jar:1.0.500.v20130404-1337:compile
+[INFO]    |  |  |  +- org.eclipse.equinox:org.eclipse.equinox.security:jar:1.2.0.v20130424-1801:compile
+[INFO]    |  |  |  +- org.eclipse.equinox:org.eclipse.equinox.registry:jar:3.5.301.v20130717-1549:compile
+[INFO]    |  |  |  +- org.eclipse.equinox:org.eclipse.equinox.p2.publisher.eclipse:jar:1.1.200.v20130516-1953:compile
+[INFO]    |  |  |  +- org.eclipse.equinox:org.eclipse.equinox.p2.publisher.pdepublishing:jar:1.0.0:compile
+[INFO]    |  |  |  +- org.eclipse.equinox:org.eclipse.equinox.p2.garbagecollector:jar:1.0.200.v20130327-2119:compile
+[INFO]    |  |  |  +- org.eclipse.equinox:org.eclipse.equinox.p2.publisher:jar:1.3.0.v20130509-0110:compile
+[INFO]    |  |  |  +- org.eclipse.equinox:org.eclipse.equinox.preferences:jar:3.5.100.v20130422-1538:compile
+[INFO]    |  |  |  +- org.eclipse.equinox:org.eclipse.equinox.simpleconfigurator.manipulator:jar:2.0.0.v20130327-2119:compile
+[INFO]    |  |  |  \- org.eclipse.equinox:org.eclipse.equinox.frameworkadmin:jar:2.0.100.v20130327-2119:compile
+[INFO]    |  |  +- org.eclipse.equinox:org.eclipse.equinox.p2.metadata:jar:2.2.0.v20130523-1557:compile
+[INFO]    |  |  +- org.eclipse.equinox:org.eclipse.equinox.p2.metadata.repository:jar:1.2.100.v20130327-2119:compile
+[INFO]    |  |  +- org.eclipse.equinox:org.eclipse.equinox.p2.repository:jar:2.3.0.v20130412-2032:compile
+[INFO]    |  |  \- org.eclipse.equinox:org.eclipse.equinox.simpleconfigurator:jar:1.0.400.v20130327-2119:compile
+[INFO]    |  \- org.wso2.carbon:org.wso2.carbon.roles.mgt:jar:4.4.3:compile
+[INFO]    +- org.apache.spark:spark-core_2.10:jar:1.4.2-wso2v1:compile
+[INFO]    |  +- com.twitter:chill_2.10:jar:0.5.0:compile
+[INFO]    |  +- com.twitter:chill-java:jar:0.5.0:compile
+[INFO]    |  +- org.apache.hadoop:hadoop-client:jar:2.2.0:compile
+[INFO]    |  |  +- org.apache.hadoop:hadoop-common:jar:2.2.0:compile
+[INFO]    |  |  |  +- org.apache.commons:commons-math:jar:2.1:compile
+[INFO]    |  |  |  +- xmlenc:xmlenc:jar:0.52:compile
+[INFO]    |  |  |  +- commons-lang:commons-lang:jar:2.5:compile
+[INFO]    |  |  |  +- commons-configuration:commons-configuration:jar:1.6:compile
+[INFO]    |  |  |  |  +- commons-collections:commons-collections:jar:3.2.1:compile
+[INFO]    |  |  |  |  +- commons-digester:commons-digester:jar:1.8:compile
+[INFO]    |  |  |  |  |  \- commons-beanutils:commons-beanutils:jar:1.7.0:compile
+[INFO]    |  |  |  |  \- commons-beanutils:commons-beanutils-core:jar:1.8.0:compile
+[INFO]    |  |  |  +- org.apache.avro:avro:jar:1.7.4:compile
+[INFO]    |  |  |  +- com.google.protobuf:protobuf-java:jar:2.5.0:compile
+[INFO]    |  |  |  +- org.apache.hadoop:hadoop-auth:jar:2.2.0:compile
+[INFO]    |  |  |  \- org.apache.commons:commons-compress:jar:1.4.1:compile
+[INFO]    |  |  |     \- org.tukaani:xz:jar:1.0:compile
+[INFO]    |  |  +- org.apache.hadoop:hadoop-hdfs:jar:2.2.0:compile
+[INFO]    |  |  |  \- org.mortbay.jetty:jetty-util:jar:6.1.26:compile
+[INFO]    |  |  +- org.apache.hadoop:hadoop-mapreduce-client-app:jar:2.2.0:compile
+[INFO]    |  |  |  +- org.apache.hadoop:hadoop-mapreduce-client-common:jar:2.2.0:compile
+[INFO]    |  |  |  |  +- org.apache.hadoop:hadoop-yarn-client:jar:2.2.0:compile
+[INFO]    |  |  |  |  \- org.apache.hadoop:hadoop-yarn-server-common:jar:2.2.0:compile
+[INFO]    |  |  |  \- org.apache.hadoop:hadoop-mapreduce-client-shuffle:jar:2.2.0:compile
+[INFO]    |  |  +- org.apache.hadoop:hadoop-yarn-api:jar:2.2.0:compile
+[INFO]    |  |  +- org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.2.0:compile
+[INFO]    |  |  |  \- org.apache.hadoop:hadoop-yarn-common:jar:2.2.0:compile
+[INFO]    |  |  +- org.apache.hadoop:hadoop-mapreduce-client-jobclient:jar:2.2.0:compile
+[INFO]    |  |  \- org.apache.hadoop:hadoop-annotations:jar:2.2.0:compile
+[INFO]    |  +- org.apache.spark:spark-launcher_2.10:jar:1.4.2-wso2v1:compile
+[INFO]    |  +- org.apache.spark:spark-network-common_2.10:jar:1.4.2-wso2v1:compile
+[INFO]    |  +- org.apache.spark:spark-network-shuffle_2.10:jar:1.4.2-wso2v1:compile
+[INFO]    |  +- org.apache.spark:spark-unsafe_2.10:jar:1.4.2-wso2v1:compile
+[INFO]    |  +- net.java.dev.jets3t:jets3t:jar:0.7.1:compile
+[INFO]    |  |  \- commons-httpclient:commons-httpclient:jar:3.1:compile
+[INFO]    |  +- org.apache.curator:curator-recipes:jar:2.4.0:compile
+[INFO]    |  |  +- org.apache.curator:curator-framework:jar:2.4.0:compile
+[INFO]    |  |  |  \- org.apache.curator:curator-client:jar:2.4.0:compile
+[INFO]    |  |  \- org.apache.zookeeper:zookeeper:jar:3.4.5:compile
+[INFO]    |  +- org.eclipse.jetty.orbit:javax.servlet:jar:3.0.0.v201112011016:compile
+[INFO]    |  +- org.apache.commons:commons-math3:jar:3.4.1:compile
+[INFO]    |  +- com.google.code.findbugs:jsr305:jar:1.3.9:compile
+[INFO]    |  +- org.slf4j:jul-to-slf4j:jar:1.7.10:compile
+[INFO]    |  +- org.slf4j:jcl-over-slf4j:jar:1.7.10:compile
+[INFO]    |  +- com.ning:compress-lzf:jar:1.0.3:compile
+[INFO]    |  +- org.xerial.snappy:snappy-java:jar:1.1.1.7:compile
+[INFO]    |  +- net.jpountz.lz4:lz4:jar:1.2.0:compile
+[INFO]    |  +- org.roaringbitmap:RoaringBitmap:jar:0.4.5:compile
+[INFO]    |  +- commons-net:commons-net:jar:2.2:compile
+[INFO]    |  +- org.spark-project.akka:akka-remote_2.10:jar:2.3.4-spark:compile
+[INFO]    |  |  +- io.netty:netty:jar:3.8.0.Final:compile
+[INFO]    |  |  +- org.spark-project.protobuf:protobuf-java:jar:2.5.0-spark:compile
+[INFO]    |  |  \- org.uncommons.maths:uncommons-maths:jar:1.2.2a:compile
+[INFO]    |  +- org.spark-project.akka:akka-slf4j_2.10:jar:2.3.4-spark:compile
+[INFO]    |  +- org.json4s:json4s-jackson_2.10:jar:3.2.10:compile
+[INFO]    |  |  \- org.json4s:json4s-core_2.10:jar:3.2.10:compile
+[INFO]    |  |     +- org.json4s:json4s-ast_2.10:jar:3.2.10:compile
+[INFO]    |  |     \- org.scala-lang:scalap:jar:2.10.0:compile
+[INFO]    |  +- com.sun.jersey:jersey-server:jar:1.9:compile
+[INFO]    |  |  \- asm:asm:jar:3.1:compile
+[INFO]    |  +- com.sun.jersey:jersey-core:jar:1.9:compile
+[INFO]    |  +- org.apache.mesos:mesos:jar:shaded-protobuf:0.21.1:compile
+[INFO]    |  +- io.netty:netty-all:jar:4.0.23.Final:compile
+[INFO]    |  +- com.clearspring.analytics:stream:jar:2.7.0:compile
+[INFO]    |  +- io.dropwizard.metrics:metrics-core:jar:3.1.2:compile
+[INFO]    |  +- io.dropwizard.metrics:metrics-jvm:jar:3.1.2:compile
+[INFO]    |  +- io.dropwizard.metrics:metrics-json:jar:3.1.2:compile
+[INFO]    |  +- io.dropwizard.metrics:metrics-graphite:jar:3.1.2:compile
+[INFO]    |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.4.4:compile
+[INFO]    |  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.4.0:compile
+[INFO]    |  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.4.4:compile
+[INFO]    |  +- com.fasterxml.jackson.module:jackson-module-scala_2.10:jar:2.4.4:compile
+[INFO]    |  |  +- org.scala-lang:scala-reflect:jar:2.10.4:compile
+[INFO]    |  |  \- com.thoughtworks.paranamer:paranamer:jar:2.6:compile
+[INFO]    |  +- org.apache.ivy:ivy:jar:2.4.0:compile
+[INFO]    |  +- oro:oro:jar:2.0.8:compile
+[INFO]    |  +- org.tachyonproject:tachyon-client:jar:0.6.4:compile
+[INFO]    |  |  \- org.tachyonproject:tachyon:jar:0.6.4:compile
+[INFO]    |  +- net.razorvine:pyrolite:jar:4.4:compile
+[INFO]    |  +- net.sf.py4j:py4j:jar:0.8.2.1:compile
+[INFO]    |  \- org.spark-project.spark:unused:jar:1.0.0:compile
+[INFO]    +- org.apache.spark:spark-sql_2.10:jar:1.4.2-wso2v1:compile
+[INFO]    |  +- org.apache.spark:spark-catalyst_2.10:jar:1.4.2-wso2v1:compile
+[INFO]    |  |  +- org.scala-lang:scala-compiler:jar:2.10.4:compile
+[INFO]    |  |  \- org.scalamacros:quasiquotes_2.10:jar:2.0.1:compile
+[INFO]    |  +- com.twitter:parquet-column:jar:1.6.0rc3:compile
+[INFO]    |  |  +- com.twitter:parquet-common:jar:1.6.0rc3:compile
+[INFO]    |  |  \- com.twitter:parquet-encoding:jar:1.6.0rc3:compile
+[INFO]    |  |     \- com.twitter:parquet-generator:jar:1.6.0rc3:compile
+[INFO]    |  +- com.twitter:parquet-hadoop:jar:1.6.0rc3:compile
+[INFO]    |  |  +- com.twitter:parquet-format:jar:2.2.0-rc1:compile
+[INFO]    |  |  +- com.twitter:parquet-jackson:jar:1.6.0rc3:compile
+[INFO]    |  |  +- org.codehaus.jackson:jackson-mapper-asl:jar:1.9.11:compile
+[INFO]    |  |  \- org.codehaus.jackson:jackson-core-asl:jar:1.9.11:compile
+[INFO]    |  \- org.jodd:jodd-core:jar:3.6.3:compile
+[INFO]    +- org.wso2.carbon.analytics:org.wso2.carbon.analytics.dataservice.core:jar:1.0.6-SNAPSHOT:compile
+[INFO]    |  +- org.wso2.carbon.analytics:org.wso2.carbon.analytics.dataservice.commons:jar:1.0.6-SNAPSHOT:compile
+[INFO]    |  +- org.testng:testng:jar:6.3.1:compile
+[INFO]    |  |  +- junit:junit:jar:3.8.1:compile
+[INFO]    |  |  +- org.beanshell:bsh:jar:2.0b4:compile
+[INFO]    |  |  +- com.beust:jcommander:jar:1.12:compile
+[INFO]    |  |  \- org.yaml:snakeyaml:jar:1.6:compile
+[INFO]    |  +- org.wso2.orbit.org.apache.lucene:lucene:jar:5.2.1.wso2v1:compile
+[INFO]    |  +- org.antlr.wso2:antlr-runtime:jar:3.2.0.wso2v1:compile
+[INFO]    |  +- org.wso2.orbit.org.ow2.asm:asm-all:jar:4.1.0.wso2v1:compile
+[INFO]    |  \- org.wso2.orbit.com.leansoft:bigqueue:jar:0.7.0.wso2v1:compile
+[INFO]    +- org.wso2.carbon.analytics:org.wso2.carbon.analytics.datasource.core:jar:1.0.6-SNAPSHOT:compile
+[INFO]    |  +- org.wso2.carbon:org.wso2.carbon.ndatasource.core:jar:4.4.3:compile
+[INFO]    |  |  +- org.wso2.carbon:org.wso2.carbon.ndatasource.common:jar:4.4.3:compile
+[INFO]    |  |  \- org.wso2.carbon:org.wso2.carbon.securevault:jar:4.4.3:compile
+[INFO]    |  \- com.hazelcast:hazelcast:jar:3.5:compile
+[INFO]    |     +- com.eclipsesource.minimal-json:minimal-json:jar:0.9.2:compile
+[INFO]    |     \- com.hazelcast:hazelcast-code-generator:jar:3.5:compile
+[INFO]    |        \- org.freemarker:freemarker:jar:2.3.22:compile
+[INFO]    +- org.wso2.carbon.analytics:org.wso2.carbon.analytics.datasource.commons:jar:1.0.6-SNAPSHOT:compile
+[INFO]    +- org.wso2.carbon.analytics:org.wso2.carbon.analytics.datasource.rdbms:jar:1.0.6-SNAPSHOT:compile
+[INFO]    |  +- org.wso2.carbon.analytics:org.wso2.carbon.analytics.datasource.core.test:jar:1.0.6-SNAPSHOT:compile
+[INFO]    |  +- org.apache.tomcat:tomcat-jdbc:jar:7.0.55:compile
+[INFO]    |  +- com.h2database:h2:jar:1.4.187:compile
+[INFO]    |  \- com.google.guava:guava:jar:15.0:compile
+[INFO]    +- org.wso2.carbon.analytics:org.wso2.carbon.analytics.spark.utils:jar:1.0.6-SNAPSHOT:compile
+[INFO]    +- org.scala-lang:scala-library:jar:2.10.4:compile
+[INFO]    +- xerces:xercesImpl:jar:2.11.0:compile
+[INFO]    |  \- xml-apis:xml-apis:jar:1.4.01:compile
+[INFO]    +- org.spark-project.akka:akka-actor_2.10:jar:2.3.4-spark:compile
+[INFO]    |  \- com.typesafe:config:jar:1.2.1:compile
+[INFO]    \- com.esotericsoftware.kryo:kryo:jar:2.21:compile
+[INFO]       \- com.esotericsoftware.reflectasm:reflectasm:jar:shaded:1.07:compile
+[INFO]          \- org.ow2.asm:asm:jar:4.0:compile
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 3.373s
+[INFO] Finished at: Tue May 17 16:56:42 IST 2016
+[INFO] Final Memory: 34M/670M
+[INFO] ------------------------------------------------------------------------
