@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.zip.GZIPOutputStream;
 
 import javax.xml.bind.DatatypeConverter;
@@ -41,18 +42,30 @@ import org.wso2.carbon.databridge.commons.utils.DataBridgeCommonsUtils;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
 
+/**
+ * arguments:
+ * <host> <port> <thredCount> <mediatorCount> <payloadsEnabled> <multitenantEnabled> <confDirectory>
+ *
+ */
 public class ConcurrentEventPublisher implements Runnable{
-    private static final int defaultThriftPort = 7611;
+    private static int receiverPort = 7612;
     private DataPublisher dataPublisher;
     private String url;
     private int threadNumber;
     private static String host = "localhost";
+    private static int threadCount = 2;
+    private static boolean withPayloads = true;
+    private static String confDirectory = "src/main/resources";
+    private static int mediatorCount = 30;
+    private static int tenantCount = 1;
+    private int tenantId = -1234;
 //    private static String host = "192.168.1.20";
     
-    public ConcurrentEventPublisher(int threadNumber, String type, String url, String authURL, String username, String password) throws Exception {
-        this.dataPublisher = new DataPublisher(type, url, authURL, username, password);
+    public ConcurrentEventPublisher(int threadNumber, String type, String url, String authURL, String username, String password, int tenantId) throws Exception {
+        this.dataPublisher = new DataPublisher(type, url, null, username, password);
         this.url = url;
         this.threadNumber = threadNumber;
+        this.tenantId = tenantId;
     }
 
     public void run() {
@@ -60,7 +73,7 @@ public class ConcurrentEventPublisher implements Runnable{
         System.out.println("Publishing to: " + url);
         String streamId = DataBridgeCommonsUtils.generateStreamId("esb-flow-entry-stream", "1.0.0");
         try {
-            publishEvents(this.dataPublisher, streamId);
+            publishEvents(this.dataPublisher, streamId, threadNumber);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -74,65 +87,77 @@ public class ConcurrentEventPublisher implements Runnable{
     
     public static void main(String[] args) throws Exception {
         String type = "Thrift";
-        int receiverPort = defaultThriftPort;
-        int securePort = receiverPort + 100;
-        String url = "tcp://" + host + ":" + receiverPort;
-        String authURL = "ssl://" + host + ":" + securePort;
-        String username = "admin";
-        String password = "admin";
-        
         if (args.length > 0) {
             host = args[0];
-            if (args.length > 1) {
-//                sleep = Integer.parseInt(args[1]);
+            receiverPort = Integer.parseInt(args[1]);
+            threadCount = Integer.parseInt(args[2]);
+            mediatorCount = Integer.parseInt(args[3]);
+            withPayloads = Boolean.parseBoolean(args[4]);
+            tenantCount = Integer.parseInt(args[5]);
+            if (args.length > 6) {
+                confDirectory =  args[6];
             }
         }
         
-        String log4jConfPath = "./src/main/resources/log4j.properties";
+        int securePort = receiverPort + 100;
+        String url = "tcp://" + host + ":" + receiverPort;
+        String authURL = "ssl://" + host + ":" + securePort;
+        
+        String log4jConfPath = confDirectory + "/log4j.properties";
         PropertyConfigurator.configure(log4jConfPath);
         String currentDir = System.getProperty("user.dir");
-        System.setProperty("javax.net.ssl.trustStore", currentDir + "/src/main/resources/client-truststore.jks");
+        System.setProperty("javax.net.ssl.trustStore", currentDir + "/" + confDirectory + "/client-truststore.jks");
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         AgentHolder.setConfigPath(getDataAgentConfigPath());
         
         System.out.println("Data Agent path: " + getDataAgentConfigPath());
-        System.out.println(System.getProperty("javax.net.ssl.trustStorePassword"));
-        
-        for (int threads = 0; threads < 5; threads++) {
-            Runnable eventPublisher = new ConcurrentEventPublisher(threads, type, url, authURL, username, password);
+        System.out.println(System.getProperty("javax.net.ssl.trustStore"));
+        int currentTenant = 0;
+        for (int threadNumber = 0; threadNumber < threadCount; threadNumber++) {
+            String username = "admin";
+            String password = "admin";
+            if (tenantCount > 1) {
+                if (currentTenant > tenantCount) {
+                    currentTenant =  1;
+                } else {
+                    currentTenant++;
+                }
+            } else {
+                currentTenant = -1234;
+            }
+            Runnable eventPublisher = new ConcurrentEventPublisher(threadNumber, type, url, authURL, username, password, currentTenant);
             Thread thread = new Thread(eventPublisher);
             thread.start();
         }
     }
 
     public static String getDataAgentConfigPath() {
-        File filePath = new File("src/main/resources");
+        File filePath = new File(confDirectory);
         return filePath.getAbsolutePath() + File.separator + "data-agent-conf.xml";
     }
 
         
-    private void publishEvents(DataPublisher dataPublisher, String streamId) throws Exception {
+    private void publishEvents(DataPublisher dataPublisher, String streamId, int threadNumber) throws Exception {
         System.out.println("Starting Data Publisher");
         long count = 0;
-        Object[] metaData = { true };
+        Object[] metaData = { true, tenantId};
         long startTime;
-        String messageId;
         long a = System.currentTimeMillis();
         Event event;
-        String[] payloadData = new String[2];
+        
         int total = 0;
         while (true) {
-            
+            String[] payloadData = new String[2];
             /******************** Creating Event Object ***************************************/
             Map <String, Object> flowMap = new HashMap <String, Object>();
             ArrayList<List<Object>> eventsList = new ArrayList<List<Object>>();
             ArrayList<PublishingPayload> payloadsList = new ArrayList<PublishingPayload>();
-            PublishingPayload pp = new PublishingPayload();
             Map<Integer, List<Integer>> eventList  = new HashMap<Integer, List<Integer>>();
-            for (int i = 0 ; i < 10 ; i++) {
+            final String  messageFlowId = UUID.randomUUID().toString() + System.currentTimeMillis() + "_" + total;
+            for (int i = 0 ; i < mediatorCount ; i++) {
                 List<Object> singleEvent = new ArrayList<Object>();
                 //messageID
-                singleEvent.add("urn_uuid_f403b0b6-4431-4a83-935d-c7b72867a222");
+                singleEvent.add("urn_uuid_" + messageFlowId);
                 //component Type
                 if (i == 0){
                     singleEvent.add("Proxy Service");
@@ -159,25 +184,29 @@ public class ConcurrentEventPublisher implements Runnable{
                 singleEvent.add(null);
                 
                 //transport/context properties
-                singleEvent.add(null);
-                singleEvent.add(null);
-               /*if (i%2 == 0) {
-                    singleEvent.add("{mediation.flow.statistics.parent.index=4, tenant.info.domain=carbon.super, mediation.flow.statistics.statistic.id=urn_uuid_ac554691-c1ad-4bfe-ad34-8536ac7d1fdb, mediation.flow.statistics.index.object=org.apache.synapse.aspects.flow.statistics.util.UniqueIdentifierObject@7a26fe97, tenant.info.id=-1234, mediation.flow.trace.collected=true, CREDIT_CARD=bbbbb, TRANSPORT_IN_NAME=http, proxy.name=LicenseServiceProxy, mediation.flow.statistics.collected=true, VEHICLE_ID=aaaaa}");
-                    singleEvent.add("{Transfer-Encoding=chunked, Host=localhost.localdomain:8282, MessageID=urn:uuid:ac554691-c1ad-4bfe-ad34-8536ac7d1fdb, To=/services/LicenseServiceProxy.LicenseServiceProxyHttpSoap12Endpoint, SOAPAction=urn:renewLicense, WSAction=urn:renewLicense, User-Agent=Axis2, Content-Type=application/soap+xml; charset=UTF-8; action=\"urn:renewLicense\"}");
-                } else {
-                    singleEvent.add(null);
-                    singleEvent.add(null);
-                }*/
+               if (withPayloads) {
+                   if (i%2 == 0) {
+                       singleEvent.add("{mediation.flow.statistics.parent.index=4, tenant.info.domain=carbon.super, mediation.flow.statistics.statistic.id=urn_uuid_ac554691-c1ad-4bfe-ad34-8536ac7d1fdb, mediation.flow.statistics.index.object=org.apache.synapse.aspects.flow.statistics.util.UniqueIdentifierObject@7a26fe97, tenant.info.id=-1234, mediation.flow.trace.collected=true, CREDIT_CARD=bbbbb, TRANSPORT_IN_NAME=http, proxy.name=LicenseServiceProxy, mediation.flow.statistics.collected=true, VEHICLE_ID=aaaaa}");
+                       singleEvent.add("{Transfer-Encoding=chunked, Host=localhost.localdomain:8282, MessageID=urn:uuid:ac554691-c1ad-4bfe-ad34-8536ac7d1fdb, To=/services/LicenseServiceProxy.LicenseServiceProxyHttpSoap12Endpoint, SOAPAction=urn:renewLicense, WSAction=urn:renewLicense, User-Agent=Axis2, Content-Type=application/soap+xml; charset=UTF-8; action=\"urn:renewLicense\"}");
+                   } else {
+                       singleEvent.add(null);
+                       singleEvent.add(null);
+                   }
+               } else {
+                   singleEvent.add(null);
+                   singleEvent.add(null);
+               }
+                    
                 //children
                 singleEvent.add(Arrays.toString(new int[]{i+1}));
-                //ebtrypoint
+                //entrypoint
                 singleEvent.add("LicenseServiceProxy");
                 //entrypoint hashcode
-                singleEvent.add(1241186573);
+                singleEvent.add("1241186573");
                 //faultcount
                 singleEvent.add(0);
                 //hascode
-                singleEvent.add(1241186573 + i);
+                singleEvent.add("1241186573" + i);
                 
                 eventsList.add(singleEvent);
                 List<Integer> attributeIndices = new ArrayList<Integer>();
@@ -185,11 +214,13 @@ public class ConcurrentEventPublisher implements Runnable{
                 attributeIndices.add(9);
                 eventList.put(i , attributeIndices);
             }
+            PublishingPayload pp = new PublishingPayload();
             pp.setEvents(eventList);
             pp.setPayload("<?xml version='1.0' encoding='utf-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:sam=\"http://sample.esb.org\"><soapenv:Body><sam:renewLicense><sam:vehicleNumber>aaaaa</sam:vehicleNumber><sam:insurancePolicy>-2081631303</sam:insurancePolicy><sam:ecoCert>311989168</sam:ecoCert></sam:renewLicense></soapenv:Body></soapenv:Envelope>");
             
-            // TODO: Comment out below line to remove payloads
-//            payloadsList.add(pp);
+            if (withPayloads) {
+                payloadsList.add(pp);
+            }
             
             flowMap.put("host", "localhost");
             flowMap.put(AnalyticsConstants.EVENTS_ATTRIBUTE, eventsList);
@@ -217,20 +248,21 @@ public class ConcurrentEventPublisher implements Runnable{
             /************ Publishing ****************************/
             startTime = System.currentTimeMillis();
             count++;
-            messageId = this.threadNumber + "_" + count + "_" + startTime;
-            payloadData[0] = "" + messageId;
+            payloadData[0] = "" + messageFlowId;
             payloadData[1] = str;
             event = new Event(streamId, System.currentTimeMillis(), metaData, null, payloadData);
             long duration = startTime-a;
             if (duration != 0 && duration%1000 == 0) {
                 a = System.currentTimeMillis();
-                System.out.println("Thread: " + this.threadNumber + " TPS: " + count*1.0/duration*1000);
+                System.out.println("Thread: " + this.threadNumber + " TPS: " + count*1.0/duration*1000 + " | Total: " + total);
                 count = 0;
             }
             dataPublisher.publish(event);
             total++;
-            
-//            Thread.sleep(2);
+//            Thread.sleep(3); 
+            if (total == 50000) {
+                break;
+            }
         }
     }
 }

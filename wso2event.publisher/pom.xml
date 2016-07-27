@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.test</groupId>
     <artifactId>wso2event.publisher</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <!-- <packaging>jar</packaging> -->
 
     <pluginRepositories>
@@ -98,36 +98,43 @@
 
     <build>
         <plugins>
-
-
-
-
+            <!-- <plugin>
+              Build an executable JAR
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-jar-plugin</artifactId>
+              <version>2.4</version>
+              <configuration>
+                <archive>
+                  <manifest>
+                    <addClasspath>true</addClasspath>
+                    <classpathPrefix>lib/</classpathPrefix>
+                    <mainClass>wso2event.publisher.ConcurrentEventPublisher</mainClass>
+                  </manifest>
+                </archive>
+              </configuration>
+            </plugin>  -->  
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>wso2event.publisher.ConcurrentEventPublisher</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                      <manifest>
+                        <mainClass>wso2event.publisher.ConcurrentEventPublisher</mainClass>
+                      </manifest>
+                    </archive>
+                </configuration>
             </plugin>
-
-
-
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -160,19 +167,7 @@
                     </instructions>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>wso2event.publisher.ConcurrentEventPublisher</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-            </plugin>
+            
         </plugins>
     </build>
 
@@ -219,7 +214,7 @@
         <dependency>
             <groupId>org.wso2.carbon.analytics-common</groupId>
             <artifactId>org.wso2.carbon.databridge.agent</artifactId>
-            <version>5.0.12-SNAPSHOT</version>
+            <version>5.1.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>slf4j.wso2</groupId>
