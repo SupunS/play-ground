@@ -3,8 +3,6 @@ How to Setup
 
 - Install jupyter
 
-- install py4j: https://www.py4j.org/install.html
-
 - Download and uncompress spark binary.
 
 - Set following in ~/.bashrc
@@ -21,7 +19,8 @@ How to Setup
 	export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.9-src.zip:$PYTHONPATH
 	export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH
 	export PYTHONPATH=$SPARK_HOME/python/lib:$PYTHONPATH
-	export PYTHONPATH=/home/supun/Supun/Softwares/Spark/py4j-0.10.3/py4j-java/py4j0.10.3.jar:$PYTHONPATH
+
+- Dowload pyrolite-4.13.jar and add that to SPARK_CLASSPATH as well. This jar is needed at runtime when converting spark-dataframe to pandas-dataframe
 
 - Run source ~/.bashrc to make the changes take effect.
 
