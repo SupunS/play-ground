@@ -1,6 +1,9 @@
 How to Setup
 ============
+
 - Install jupyter
+
+- install py4j: https://www.py4j.org/install.html
 
 - Download and uncompress spark binary.
 
@@ -23,8 +26,6 @@ How to Setup
 - Run source ~/.bashrc to make the changes take effect.
 
 - Create an "python-workspace" directory and navigate to it.
-
-- install py4j: https://www.py4j.org/install.html
 
 - Start DAS in Cluster mode. Make sure to reduce the cores allocated to CarbonAnalytics spark APP. Unset SPARK_CLASSPATH to start DAS, if python and DAS are running in the same machine.
 		Spark Master UI will be available at http://localhost:8081
