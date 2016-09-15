@@ -9,10 +9,15 @@ How to Setup
 - Set following in ~/.bashrc
 
 export PYSPARK_DRIVER_PYTHON=ipython
-export PYSPARK_DRIVER_PYTHON_OPTS='notebook' pyspark
+
+export PYSPARK_DRIVER_PYTHON_OPTS='notebook' 
+
 export PYSPARK_PYTHON=/home/supun/Supun/Softwares/anaconda3/bin/python
+
 export SPARK_HOME="/home/supun/Supun/Softwares/spark-1.6.2-bin-hadoop2.6"
+
 export PYSPARK_SUBMIT_ARGS="--master local[2]"
+
 export PATH="/home/supun/Supun/Softwares/spark-1.6.2-bin-hadoop2.6/bin:$PATH"
 export SPARK_CLASSPATH=/home/supun/Downloads/wso2das-3.1.0/repository/components/plugins/abdera_1.0.0.wso2v3.jar:/home/supun/Downloads/wso2das-3.1.0/repository/components/plugins/ajaxtags_1.3.0.beta-rc7-wso2v1.jar.......
 
