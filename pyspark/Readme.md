@@ -29,10 +29,9 @@ How to Setup
 - Start DAS in Cluster mode. Make sure to reduce the cores allocated to CarbonAnalytics spark APP. Unset SPARK_CLASSPATH to start DAS, if python and DAS are running in the same machine.
 		Spark Master UI will be available at http://localhost:8081
 
-- Run "pyspark"
+- Run: pyspark --master spark://10.100.5.116:7077 --conf "spark.driver.extraJavaOptions=-Dwso2_custom_conf_dir=/home/supun/Downloads/wso2das-3.1.0/repository/conf"
 	jupyter will be available in http://localhost:8888/
-	start with following to connect to a remote spark cluster (Spark Master URL of cluster created by DAS)
-		--master spark://10.100.5.116:7077
+	Here, spark://10.100.5.116:7077 is the Spark Master URL of cluster created by DAS
 
 
 Running .py script:
