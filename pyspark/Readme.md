@@ -1,11 +1,13 @@
 How to Setup
 ============
 
+
 - Install jupyter
 
 - Download and uncompress spark binary.
 
 - Set following in ~/.bashrc
+- 
 	export PYSPARK_DRIVER_PYTHON=ipython
 	export PYSPARK_DRIVER_PYTHON_OPTS='notebook' pyspark
 	export PYSPARK_PYTHON=/home/supun/Supun/Softwares/anaconda3/bin/python
@@ -34,6 +36,8 @@ How to Setup
 	Here, spark://10.100.5.116:7077 is the Spark Master URL of cluster created by DAS
 
 
+
 Running .py script:
 -------------------
+
  <SPARK_HOME>./bin/spark-submit --master spark://<spark-master-ip>:7077 --conf "spark.driver.extraJavaOptions=-Dwso2_custom_conf_dir=/home/supun/Downloads/wso2das-3.1.0/repository/conf" /home/supun/Supun/MachineLearning/python/PySpark-Sample.py
