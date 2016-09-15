@@ -23,7 +23,7 @@ export PYTHONPATH=$SPARK_HOME/python/lib:$PYTHONPATH
 ```
 - Dowload pyrolite-4.13.jar and add that to SPARK_CLASSPATH as well. This jar is needed at runtime when converting spark-dataframe to pandas-dataframe
 
-- Run source ~/.bashrc to make the changes take effect.
+- Run `source ~/.bashrc` to make the changes take effect.
 
 - Create an "python-workspace" directory and navigate to it.
 
@@ -31,8 +31,9 @@ export PYTHONPATH=$SPARK_HOME/python/lib:$PYTHONPATH
 		Spark Master UI will be available at http://localhost:8081
 
 - Run: `pyspark --master spark://10.100.5.116:7077 --conf "spark.driver.extraJavaOptions=-Dwso2_custom_conf_dir=/home/supun/Downloads/wso2das-3.1.0/repository/conf"`
-	jupyter will be available in http://localhost:8888/
-	Here, spark://10.100.5.116:7077 is the Spark Master URL of cluster created by DAS
+
+jupyter will be available in http://localhost:8888/
+Here, spark://10.100.5.116:7077 is the Spark Master URL of cluster created by DAS
 
 
 
