@@ -16,12 +16,7 @@ sparkConf = (SparkConf()
              .set(key="spark.driver.allowMultipleContexts",value="true")
              .set(key="spark.executor.extraJavaOptions", value="-Dwso2_custom_conf_dir=/home/supun/Downloads/wso2das-3.1.0/repository/conf"))
 
-import os
-os.environ["wso2_custom_conf_dir"] = "/home/supun/Downloads/wso2das-3.1.0/repository/conf"
-print(os.environ["wso2_custom_conf_dir"])
-
-# Stop the default SparkContext created by pyspark. And create a new SparkContext using the above SparkConf.
-#sc.stop()
+#Create a new SparkContext using the above SparkConf.
 sparkCtx = SparkContext(conf=sparkConf)
 
 # Check spark master.
