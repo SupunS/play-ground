@@ -8,6 +8,7 @@ How to Setup
 
 - Set following in ~/.bashrc
 
+
 	export PYSPARK_DRIVER_PYTHON=ipython
 	export PYSPARK_DRIVER_PYTHON_OPTS='notebook' pyspark
 	export PYSPARK_PYTHON=/home/supun/Supun/Softwares/anaconda3/bin/python
