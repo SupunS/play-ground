@@ -1,3 +1,9 @@
+About
+============
+This project contains information and samples on how to connect iPython/Jupyter Notebook to WSO2 DAS server, and run python script on top of data stored in DAS, using pyspark.
+
+
+
 How to Setup
 ============
 
