@@ -20,18 +20,21 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 
 public class JsonSerializationTest {
     
     public static void main(String [] args) throws Exception {
         
         // Read the json and bind to objects
-        byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/original-deplyment-artifacts/output.json"));
-        String json = new String(encoded, "UTF-8");
+        /*byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/sample.json"));
+        String json = new String(encoded, "UTF-8");*/
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readValue(json, JsonNode.class);
+        Map root = mapper.readValue(new FileInputStream(new File("/home/supun/Desktop/sample.json")), Map.class);
         
         // Write the object back to output stream
         ByteArrayOutputStream out = new ByteArrayOutputStream();

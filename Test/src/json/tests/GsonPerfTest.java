@@ -33,54 +33,52 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class GsonTest {
-    
-    public static void main(String [] args) throws Exception {
-        
-        GsonTest test = new GsonTest();
+public class GsonPerfTest {
+
+    public static void main(String[] args) throws Exception {
+
+        GsonPerfTest test = new GsonPerfTest();
         byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/json-samples/100K-sample.json"));
         String json = new String(encoded, "UTF-8");
-        
-        
+
         long startTime = System.currentTimeMillis();
         int count = 0;
-        for(int i = 0 ; i < 100000 ; i++) {
-            
+        for (int i = 0; i < 100000; i++) {
+
             // Change this accordingly
             test.printNthElement(json);
-            
+
             count++;
             if ((i % 5000) == 0) {
                 long endTime = System.currentTimeMillis();
                 double duration = (endTime - startTime);
                 System.out.println(count + "/" + duration);
-                System.out.println("Single Exection Time: " + duration/count);
-                System.out.println("Traversal Rate: " + count/duration*1000);
+                System.out.println("Single Exection Time: " + duration / count);
+                System.out.println("Traversal Rate: " + count / duration * 1000);
                 startTime = System.currentTimeMillis();
                 count = 0;
             }
         }
-        
     }
-    
+
     /**
      * print some random element of a json array, with streaming+tree model
      */
     private void printNthElement(String json) throws IOException {
         Reader stringReader = new StringReader(json);
         JsonReader jsonReader = new JsonReader(stringReader);
-        
+
         // consume the first token
         jsonReader.beginObject();
-        
+
         while (jsonReader.hasNext()) {
             jsonReader.skipValue();
             JsonToken token = jsonReader.peek();
             if (token.equals(JsonToken.BEGIN_ARRAY)) {
                 jsonReader.beginArray();
-                
+
                 // Change this accordingly
-                printFirstElement(jsonReader);
+                printLastElement(jsonReader);
                 break;
             } else {
                 jsonReader.skipValue();
@@ -88,13 +86,11 @@ public class GsonTest {
         }
         // System.out.println("Done!");
     }
-    
-    
+
     /**
      * Read the first element of a array
      */
     private void printFirstElement(JsonReader reader) throws IOException {
-        int arrayIndex = 0;
         JsonElement element = null;
         JsonParser jp = new JsonParser();
         while (reader.hasNext()) {
@@ -105,14 +101,11 @@ public class GsonTest {
             } else if (token.equals(JsonToken.BEGIN_OBJECT)) {
                 element = jp.parse(reader);
                 break;
-            } else if (token.equals(JsonToken.END_OBJECT)) {
-                reader.endObject();
-            } else
-                element = jp.parse(reader);
+            }
         }
         // System.out.println(arrayIndex + " th Element: \n" + element);
     }
-    
+
     /**
      * Read last element of a array
      */
@@ -128,14 +121,13 @@ public class GsonTest {
             } else if (token.equals(JsonToken.BEGIN_OBJECT)) {
                 element = jp.parse(reader);
                 arrayIndex++;
-            } else if (token.equals(JsonToken.END_OBJECT)) {
-                reader.endObject();
-            } else
-                element = jp.parse(reader);
+            } else {
+                continue;
+            }
         }
         // System.out.println(arrayIndex + " th Element: \n" + element);
     }
-    
+
     /**
      * Read last element of a array
      */
@@ -154,14 +146,11 @@ public class GsonTest {
                     element = jp.parse(reader);
                     break;
                 }
-            } else if (token.equals(JsonToken.END_OBJECT)) {
-                reader.endObject();
-            } else
-                element = jp.parse(reader);
+            }
         }
         // System.out.println(arrayIndex + " th Element: \n" + element);
     }
-    
+
     /**
      * Serialize and write a json element to a output stream
      */
@@ -172,8 +161,7 @@ public class GsonTest {
         gson.toJson(element, jsonWriter);
         jsonWriter.flush();
     }
-    
-    
+
     private void getElementInMemory(String json) {
         JsonElement root = new JsonParser().parse(json);
         JsonArray jsonArray = root.getAsJsonObject().get("menu").getAsJsonArray();
