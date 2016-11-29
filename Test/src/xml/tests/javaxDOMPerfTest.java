@@ -16,61 +16,61 @@
  */
 package xml.tests;
 
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.bind.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+@State(Scope.Benchmark)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@BenchmarkMode(Mode.AverageTime)
 public class javaxDOMPerfTest {
 
+    private static String json;
+    
     public static void main(String[] args) throws Exception {
+        Options opt = new OptionsBuilder()
+                .include(javaxDOMPerfTest.class.getSimpleName())
+                .warmupIterations(10)
+                .measurementIterations(20)
+                .threads(2)
+                .forks(1)
+                .build();
 
-        javaxDOMPerfTest test = new javaxDOMPerfTest();
-        byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/xml-samples/800kb.xml"));
-        String json = new String(encoded, "UTF-8");
-
-        Node nthElement = null;
-        long startTime = System.currentTimeMillis();
-        int count = 0;
-        for (int i = 0; i < 100000; i++) {
-
-            // Change this accordingly
-            nthElement = test.printLastElement(json);
-            
-            count++;
-            if ((i % 5000) == 0) {
-                long endTime = System.currentTimeMillis();
-                double duration = (endTime - startTime);
-                System.out.println(count + "/" + duration);
-                System.out.println("Single Exection Time: " + duration / count);
-                System.out.println("Traversal Rate: " + count / duration * 1000);
-                startTime = System.currentTimeMillis();
-                count = 0;
-            }
-        }
-        Document document = nthElement.getOwnerDocument();
-        DOMImplementationLS domImplLS = (DOMImplementationLS) document.getImplementation();
-        LSSerializer serializer = domImplLS.createLSSerializer();
-        String str = serializer.writeToString(nthElement);
-        System.out.println(str);
+        new Runner(opt).run();
     }
 
+    @Setup
+    public void setup() throws IOException {
+        byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/xml-samples/13kb.xml"));
+        json = new String(encoded, "UTF-8");
+    }
 
     /**
      * Read the first element of a array
      */
-    private Node printFirstElement(String json) throws Exception {
+    @Benchmark
+    public Node printFirstElement() throws Exception {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         InputSource is = new InputSource();
@@ -84,7 +84,8 @@ public class javaxDOMPerfTest {
      * 
      * @return
      */
-    private Node printLastElement(String json) throws Exception {
+    @Benchmark
+    public Node printLastElement() throws Exception {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         InputSource is = new InputSource();
@@ -99,7 +100,7 @@ public class javaxDOMPerfTest {
      * 
      * @return
      */
-    private Element printNthElement(String json, int n) throws IOException {
+    public Element printNthElement(String json, int n) throws IOException {
         return null;
     }
 }

@@ -19,7 +19,16 @@ package xml.tests;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.XMLOutputter;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -27,43 +36,38 @@ import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+@State(Scope.Benchmark)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@BenchmarkMode(Mode.AverageTime)
 public class JDOMPerfTest {
 
+    private static String json;
+    
     public static void main(String[] args) throws Exception {
+        Options opt = new OptionsBuilder()
+                .include(JDOMPerfTest.class.getSimpleName())
+                .warmupIterations(10)
+                .measurementIterations(20)
+                .threads(2)
+                .forks(1)
+                .build();
 
-        JDOMPerfTest test = new JDOMPerfTest();
-        byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/xml-samples/13kb.xml"));
-        String json = new String(encoded, "UTF-8");
-
-        Element nthElement = null;
-        long startTime = System.currentTimeMillis();
-        int count = 0;
-        for (int i = 0; i < 1000000; i++) {
-
-            // Change this accordingly
-            nthElement = test.printLastElement(json);
-            
-            count++;
-            if ((i % 100000) == 0) {
-                long endTime = System.currentTimeMillis();
-                double duration = (endTime - startTime);
-                System.out.println(count + "/" + duration);
-                System.out.println("Single Exection Time: " + duration / count);
-                System.out.println("Traversal Rate: " + count / duration * 1000);
-                startTime = System.currentTimeMillis();
-                count = 0;
-            }
-        }
-        XMLOutputter out = new XMLOutputter();
-        System.out.println(out.outputString(nthElement));
+        new Runner(opt).run();
     }
 
+    @Setup
+    public void setup() throws IOException {
+        byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/xml-samples/13kb.xml"));
+        json = new String(encoded, "UTF-8");
+    }
 
     /**
      * Read the first element of a array
      */
-    private Element printFirstElement(String json) throws Exception {
+    @Benchmark
+    public Element printFirstElement() throws Exception {
         Reader stringReader = new StringReader(json);
         SAXBuilder builder = new SAXBuilder();
         Document root = builder.build(stringReader);
@@ -72,10 +76,9 @@ public class JDOMPerfTest {
 
     /**
      * Read last element of a array
-     * 
-     * @return
      */
-    private Element printLastElement(String json) throws Exception {
+    @Benchmark
+    public Element printLastElement() throws Exception {
         Reader stringReader = new StringReader(json);
         SAXBuilder builder = new SAXBuilder();
         Document root = builder.build(stringReader);
@@ -88,7 +91,7 @@ public class JDOMPerfTest {
      * 
      * @return
      */
-    private Element printNthElement(String json, int n) throws IOException {
+    public Element printNthElement(String json, int n) throws IOException {
         return null;
     }
 }

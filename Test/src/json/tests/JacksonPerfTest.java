@@ -22,120 +22,100 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+@State(Scope.Benchmark)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@BenchmarkMode(Mode.AverageTime)
 public class JacksonPerfTest {
 
+    private static String json;
+    private static int n = 40;
+    
     public static void main(String[] args) throws Exception {
+        Options opt = new OptionsBuilder()
+                .include(JacksonPerfTest.class.getSimpleName())
+                .warmupIterations(10)
+                .measurementIterations(20)
+                .threads(2)
+                .forks(1)
+                .build();
 
-        JacksonPerfTest test = new JacksonPerfTest();
-        byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/json-samples/10K-sample.json"));
-        String json = new String(encoded, "UTF-8");
-
-        JsonNode nthElement = null;
-        long startTime = System.currentTimeMillis();
-        int count = 0;
-        for (int i = 0; i < 10000000; i++) {
-
-            // Change this accordingly
-            nthElement = test.printNthElement(json);
-            count++;
-            if ((i % 500000) == 0) {
-                long endTime = System.currentTimeMillis();
-                double duration = (endTime - startTime);
-                System.out.println(count + "/" + duration);
-                System.out.println("Single Exection Time: " + duration / count);
-                System.out.println("Traversal Rate: " + count / duration * 1000);
-                startTime = System.currentTimeMillis();
-                count = 0;
-            }
-        }
-        System.out.println(nthElement);
+        new Runner(opt).run();
     }
-
-    /**
-     * print some random element of a json array, with streaming+tree model
-     */
-    private JsonNode printNthElement(String json) throws IOException {
-        JsonFactory jfactory = new JsonFactory();
-        jfactory.setCodec(new ObjectMapper());
-        JsonParser jParser = jfactory.createParser(json);
-        JsonNode element = null;
-        while (true) {
-            JsonToken token = jParser.nextToken();
-            if (token == null) {
-                break;
-            }
-            if (token.equals(JsonToken.START_ARRAY)) {
-
-                // TODO Change this accordingly
-                element = printLastElement(jParser);
-                break;
-            }
-        }
-        // System.out.println("Done!");
-        return element;
+    
+    @Setup
+    public void setup() throws IOException {
+        byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/json-samples/1M-sample.json"));
+        json = new String(encoded, "UTF-8");
     }
 
     /**
      * Read the first element of a array
      */
-    private JsonNode printFirstElement(JsonParser jParser) throws IOException {
+    @Benchmark
+    public JsonNode printFirstElement() throws IOException {
+        JsonFactory jfactory = new JsonFactory();
+        jfactory.setCodec(new ObjectMapper());
+        JsonParser jParser = jfactory.createParser(json);
         JsonNode element = null;
+        
+        boolean isInArray = false;
+
         while (true) {
             JsonToken token = jParser.nextToken();
-            if (token.equals(JsonToken.END_ARRAY)) {
+            if (token == null) {
                 break;
-            } else if (token.equals(JsonToken.START_OBJECT)) {
+            } else if (token.equals(JsonToken.START_ARRAY)) {
+                isInArray = true;
+            } else if (isInArray && token.equals(JsonToken.END_ARRAY)) {
+                break;
+            } else if (isInArray &&  token.equals(JsonToken.START_OBJECT)) {
                 element = jParser.readValueAsTree();
                 break;
-            } else {
-                continue;
             }
         }
-        // System.out.println(arrayIndex + " th Element: \n" + element);
         return element;
     }
 
     /**
      * Read last element of a array
-     * 
-     * @return
      */
-    private JsonNode printLastElement(JsonParser jParser) throws IOException {
+    @Benchmark
+    public JsonNode printNthElement() throws IOException {
+        JsonFactory jfactory = new JsonFactory();
+        jfactory.setCodec(new ObjectMapper());
+        JsonParser jParser = jfactory.createParser(json);
         JsonNode element = null;
-        while (true) {
-            JsonToken token = jParser.nextToken();
-            if (token.equals(JsonToken.END_ARRAY)) {
-                break;
-            } else if (token.equals(JsonToken.START_OBJECT)) {
-                element = jParser.readValueAsTree();
-            } else {
-                continue;
-            }
-        }
-        // System.out.println(arrayIndex + " th Element: \n" + element);
-        return element;
-    }
-
-    /**
-     * Read last element of a array
-     * 
-     * @return
-     */
-    private JsonNode printNthElement(JsonParser jParser, int n) throws IOException {
         int arrayIndex = 0;
-        JsonNode element = null;
+        boolean isInArray = false;
+
         while (true) {
             JsonToken token = jParser.nextToken();
-            if (token.equals(JsonToken.END_ARRAY)) {
+            if (token == null) {
                 break;
-            } else if (token.equals(JsonToken.START_OBJECT)) {
-                arrayIndex++;
+            } else if (token.equals(JsonToken.START_ARRAY)) {
+                isInArray = true;
+            } else if (isInArray && token.equals(JsonToken.END_ARRAY)) {
+                break;
+            } else if (isInArray &&  token.equals(JsonToken.START_OBJECT)) {
+                arrayIndex ++;
                 if (arrayIndex == n) {
                     element = jParser.readValueAsTree();
                     break;
@@ -144,27 +124,99 @@ public class JacksonPerfTest {
                 }
             }
         }
-        // System.out.println(arrayIndex + " th Element: \n" + element);
+        return element;
+    }
+    
+    /**
+     * Read last element of a array
+     */
+    @Benchmark
+    public JsonNode printLastElement() throws IOException {
+        JsonFactory jfactory = new JsonFactory();
+        jfactory.setCodec(new ObjectMapper());
+        JsonParser jParser = jfactory.createParser(json);
+        JsonNode element = null;
+        int arrayIndex = 0;
+        boolean isInArray = false;
+
+        while (true) {
+            JsonToken token = jParser.nextToken();
+            if (token == null) {
+                break;
+            } else if (token.equals(JsonToken.START_ARRAY)) {
+                isInArray = true;
+            } else if (isInArray && token.equals(JsonToken.END_ARRAY)) {
+                break;
+            } else if (isInArray &&  token.equals(JsonToken.START_OBJECT)) {
+                arrayIndex ++;
+                element = jParser.readValueAsTree();
+            }
+        }
         return element;
     }
 
+
     /**
-     * Get nth element from Jackson Tree
+     * Get first element from Jackson Tree
      */
-    private JsonNode getElementFromTree(String json) throws Exception {
+    @Benchmark 
+    public JsonNode getFirstElementFromTree() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readValue(json, JsonNode.class);
-        return root.get("menu").get(root.get("menu").size() - 1);
-        // System.out.println(jsonArray.get(0));
+        return root.get("menu").get(0);
     }
 
     /**
-     * Get nth element from Jackson Tree
+     * Get first element from Jackson Map
      */
-    private Map getElementFromMap(String json) throws Exception {
+    @Benchmark 
+    public Map getFirstElementFromMap() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         Map root = mapper.readValue(json, Map.class);
         return (Map) ((List) root.get("menu")).get(0);
-        // System.out.println(jsonArray.get(0));
+    }
+    
+    
+    /**
+     * Get nth element from Jackson Tree
+     */
+    @Benchmark 
+    public JsonNode getNthElementFromTree() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readValue(json, JsonNode.class);
+        return root.get("menu").get(n);
+    }
+
+    /**
+     * Get nth element from Jackson Map
+     */
+    @Benchmark 
+    public Map getNthElementFromMap() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        Map root = mapper.readValue(json, Map.class);
+        return (Map) ((List) root.get("menu")).get(n);
+    }
+    
+    
+    /**
+     * Get last element from Jackson Tree
+     */
+    @Benchmark 
+    public JsonNode getLastElementFromTree() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readValue(json, JsonNode.class);
+        JsonNode menu = root.get("menu");
+        return menu.get(menu.size() - 1);
+    }
+
+    /**
+     * Get last element from Jackson Map
+     */
+    @Benchmark 
+    public Map getLastElementFromMap() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        Map root = mapper.readValue(json, Map.class);
+        List menu = (List) root.get("menu");
+        return (Map) menu.get(menu.size() -1);
     }
 }

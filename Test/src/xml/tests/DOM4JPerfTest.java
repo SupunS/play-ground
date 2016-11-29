@@ -19,6 +19,16 @@ package xml.tests;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -26,42 +36,39 @@ import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+@State(Scope.Benchmark)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@BenchmarkMode(Mode.AverageTime)
 public class DOM4JPerfTest {
 
+    private static String json;
+    
     public static void main(String[] args) throws Exception {
 
-        DOM4JPerfTest test = new DOM4JPerfTest();
-        byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/xml-samples/13kb.xml"));
-        String json = new String(encoded, "UTF-8");
+        Options opt = new OptionsBuilder()
+                .include(DOM4JPerfTest.class.getSimpleName())
+                .warmupIterations(10)
+                .measurementIterations(20)
+                .threads(2)
+                .forks(1)
+                .build();
 
-        Element nthElement = null;
-        long startTime = System.currentTimeMillis();
-        int count = 0;
-        for (int i = 0; i < 1000000; i++) {
-
-            // Change this accordingly
-            nthElement = test.printLastElement(json);
-            
-            count++;
-            if ((i % 100000) == 0) {
-                long endTime = System.currentTimeMillis();
-                double duration = (endTime - startTime);
-                System.out.println(count + "/" + duration);
-                System.out.println("Single Exection Time: " + duration / count);
-                System.out.println("Traversal Rate: " + count / duration * 1000);
-                startTime = System.currentTimeMillis();
-                count = 0;
-            }
-        }
-        System.out.println(nthElement.asXML());
+        new Runner(opt).run();
     }
 
+    @Setup
+    public void setup() throws IOException {
+        byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/xml-samples/13kb.xml"));
+        json = new String(encoded, "UTF-8");
+    }
 
     /**
      * Read the first element of a array
      */
-    private Element printFirstElement(String json) throws Exception {
+    @Benchmark
+    public Element printFirstElement() throws Exception {
         Reader stringReader = new StringReader(json);
         SAXReader reader = new SAXReader();
         Document root = reader.read(stringReader);
@@ -70,10 +77,9 @@ public class DOM4JPerfTest {
 
     /**
      * Read last element of a array
-     * 
-     * @return
      */
-    private Element printLastElement(String json) throws Exception {
+    @Benchmark
+    public Element printLastElement() throws Exception {
         Reader stringReader = new StringReader(json);
         SAXReader reader = new SAXReader();
         Document root = reader.read(stringReader);
@@ -83,10 +89,7 @@ public class DOM4JPerfTest {
 
     /**
      * Read last element of a array
-     * 
-     * @return
      */
-    private Element printNthElement(String json, int n) throws IOException {
-        return null;
+    public void printNthElement(String json, int n) throws IOException {
     }
 }
