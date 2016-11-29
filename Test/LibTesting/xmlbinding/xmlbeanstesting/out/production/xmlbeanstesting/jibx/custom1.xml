@@ -1,0 +1,6 @@
+<custom property-access="true">
+  <class name="jibx.Person"
+       requireds="id name"/>
+  <class name="jibx.Persons"
+      requireds="persons"/>
+</custom>
