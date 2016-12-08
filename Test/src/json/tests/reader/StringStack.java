@@ -19,17 +19,18 @@ package json.tests.reader;
 /**
  *  A Custom stack implementation based on arrays. Objects are inserted and retrieved
  *  in last-in-first-out (LIFO) basis.
+ * @param <T>
  */
-public class CustomStack {
+public class StringStack {
     private String[] stack;
 
-    private int total;
+    private int total = 0;
 
     /**
      * Create a auto-growing Stack with given initial size.
      * @param size
      */
-    public CustomStack(int size) {
+    public StringStack(int size) {
         stack = new String[size];
     }
 
@@ -51,7 +52,7 @@ public class CustomStack {
      *            Element to be added to the stack
      * @return Resulting stack after adding the element
      */
-    public CustomStack push(String element) {
+    public StringStack push(String element) {
         if (stack.length == total) {
             resize(stack.length * 2);
         }
@@ -75,6 +76,19 @@ public class CustomStack {
                 resize(stack.length / 2);
             }
             return topElement;
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * Return the top most element of the stack, without removing it. If the stack is empty, it will return null.
+     * 
+     * @return  Top most element of the stack
+     */
+    public String peek() {
+        if (!isEmpty()) {
+            return stack[total - 1];
         } else {
             return null;
         }

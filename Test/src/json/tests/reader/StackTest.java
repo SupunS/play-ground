@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 public class StackTest {
 
     ArrayDeque<String> arrayDequeStack = new ArrayDeque<String>();
-    CustomStack customStack = new CustomStack(50);
+    StringStack customStack = new StringStack(50);
     
     Stack<String> stack2 = new Stack<String>();
     String[] array;
@@ -70,16 +70,28 @@ public class StackTest {
         arrayDequeStack.add("nine");
         arrayDequeStack.add("ten");
         
+        
+        stack2.add("one");
+        stack2.add("two");
+        stack2.add("three");
+        stack2.add("four");
+        stack2.add("five");
+        stack2.add("six");
+        stack2.add("seven");
+        stack2.add("eight");
+        stack2.add("nine");
+        stack2.add("ten");
+        
         customStack.push("one");
-        customStack.push("two");
-        customStack.push("three");
-        customStack.push("four");
-        customStack.push("five");
-        customStack.push("six");
-        customStack.push("seven");
-        customStack.push("eight");
-        customStack.push("nine");
-        customStack.push("ten");
+        customStack.push("one");
+        customStack.push("one");
+        customStack.push("one");
+        customStack.push("one");
+        customStack.push("one");
+        customStack.push("one");
+        customStack.push("one");
+        customStack.push("one");
+        customStack.push("one");
         
         array = arrayDequeStack.toArray(new String[0]);
     }
@@ -87,46 +99,64 @@ public class StackTest {
     @Benchmark
     public void arrayDeque() {
         arrayDequeStack.add("a");
-        arrayDequeStack.add("b");
-        arrayDequeStack.pollLast();
         arrayDequeStack.pollLast();
     }
     
+    @Benchmark
     public void stack() {
         stack2.add("a");
-        stack2.add("b");
-        stack2.pop();
         stack2.pop();
     }
     
     @Benchmark
     public void customStack() {
         customStack.push("one");
-        customStack.push("two");
-        customStack.pop();
         customStack.pop();
     }
     
+//    @Benchmark
     public void stringBuilderTest() {
         for (int i = 0 ; i < 100 ; i++) {
             StringBuilder sb = new StringBuilder("/");
-            for (int j = 0 ; j < 5 ; j++) {
-                sb.append("some-text/");
+            for (int j = 0 ; j < 3 ; j++) {
+                sb.append("some-text").append("/");
             }
             sb.toString();
         }
     }
 
+//    @Benchmark
     public void stringAppendTest() {
         for (int i = 0 ; i < 100 ; i++) {
             String s = "/";
-            for (int j = 0 ; j < 5 ; j++) {
-                s = s + "some-text/";
+            for (int j = 0 ; j < 3 ; j++) {
+                s = s + "some-text" + "/";
             }
         }
     }
     
-    @Benchmark
+    
+//    @Benchmark
+    public void stringBuilder10Test() {
+        for (int i = 0 ; i < 100 ; i++) {
+            StringBuilder sb = new StringBuilder("/");
+            for (int j = 0 ; j < 15 ; j++) {
+                sb.append("some-text").append("/");
+            }
+            sb.toString();
+        }
+    }
+
+//    @Benchmark
+    public void stringAppend10Test() {
+        for (int i = 0 ; i < 100 ; i++) {
+            String s = "/";
+            for (int j = 0 ; j < 15 ; j++) {
+                s = s + "some-text" + "/";
+            }
+        }
+    }
+    
     public void arrayDequeLoop() {
         for (int i = 0 ; i < 100 ; i++) {
             for (String s : arrayDequeStack) {
@@ -148,10 +178,9 @@ public class StackTest {
         }
     }
     
-    @Benchmark
     public void customStackLoop() {
         for (int i = 0; i < 100; i++) {
-            for (String s : customStack.toArray()) {
+            for (Object s : customStack.toArray()) {
                 if(s == "") {
                     // do nothing
                 }

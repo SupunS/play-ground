@@ -58,7 +58,7 @@ public class GsonPerfTest {
                 .include(GsonPerfTest.class.getSimpleName())
                 .warmupIterations(10)
                 .measurementIterations(20)
-                .threads(2)
+                .threads(1)
                 .forks(1)
                 .build();
 
@@ -67,14 +67,13 @@ public class GsonPerfTest {
 
     @Setup
     public void setup() throws IOException {
-        byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/json-samples/100K-sample.json"));
+        byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/json-samples/1M-sample.json"));
         json = new String(encoded, "UTF-8");
     }
     
     /**
      * Read the first element of a array
      */
-    @Benchmark
     public JsonElement printFirstElement() throws IOException {
         Reader stringReader = new StringReader(json);
         JsonReader jsonReader = new JsonReader(stringReader);
@@ -137,7 +136,6 @@ public class GsonPerfTest {
     /**
      * Read nth element of a array
      */
-    @Benchmark
     public JsonElement printNthElement() throws IOException {
         Reader stringReader = new StringReader(json);
         JsonReader jsonReader = new JsonReader(stringReader);

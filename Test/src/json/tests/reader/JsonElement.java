@@ -20,7 +20,7 @@ public class JsonElement {
     String name;
     ElementType type;
     
-    JsonElement(String name, ElementType type) {
+    public JsonElement(String name, ElementType type) {
         this.name = name;
         this.type = type;
     }

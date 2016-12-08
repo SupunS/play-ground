@@ -26,7 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Stack;
 
-public class CustomJsonParserTest {
+public class CustomJsonReaderTest {
     
     static String currentElementName = "/";
     static Stack<String> readElements = new Stack<String>();
@@ -41,7 +41,7 @@ public class CustomJsonParserTest {
         JsonReader jr = new JsonReader(new StringReader(json));
         
         
-        CustomJSONStreamReader customJsonReader = new CustomJSONStreamReader(new StringReader(json), requiredElements);
+        JSONStreamReader customJsonReader = new JSONStreamReader(new StringReader(json), requiredElements);
         handleElement(customJsonReader, null);
         
         System.out.println(readElements);

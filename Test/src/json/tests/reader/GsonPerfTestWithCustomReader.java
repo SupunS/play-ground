@@ -77,7 +77,7 @@ public class GsonPerfTestWithCustomReader {
      * Read the first element of a array
      */
     public JsonElement printFirstElement() throws IOException {
-        CustomJSONStreamReader jsonReader = new CustomJSONStreamReader(new StringReader(json), requiredElements);
+        JSONStreamReader jsonReader = new JSONStreamReader(new StringReader(json), requiredElements);
         JsonParser jp = new JsonParser();
         boolean isInArray = false;
         JsonElement element = null;
@@ -107,7 +107,7 @@ public class GsonPerfTestWithCustomReader {
      */
     @Benchmark
     public JsonElement printLastElement() throws IOException {
-        CustomJSONStreamReader jsonReader = new CustomJSONStreamReader(new StringReader(json), requiredElements);
+        JSONStreamReader jsonReader = new JSONStreamReader(new StringReader(json), requiredElements);
         JsonParser jp = new JsonParser();
         boolean isInArray = false;
         JsonElement element = null;
@@ -137,7 +137,7 @@ public class GsonPerfTestWithCustomReader {
      * Read nth element of a array
      */
     public JsonElement printNthElement() throws IOException {
-        CustomJSONStreamReader jsonReader = new CustomJSONStreamReader(new StringReader(json), requiredElements);
+        JSONStreamReader jsonReader = new JSONStreamReader(new StringReader(json), requiredElements);
         JsonParser jp = new JsonParser();
         boolean isInArray = false;
         JsonElement element = null;
@@ -181,7 +181,7 @@ public class GsonPerfTestWithCustomReader {
 
     @Benchmark
     public JsonElement getFirstElementInMemory() {
-        CustomJSONStreamReader jsonReader = new CustomJSONStreamReader(new StringReader(json), requiredElements);
+        JSONStreamReader jsonReader = new JSONStreamReader(new StringReader(json), requiredElements);
         JsonElement root = new JsonParser().parse(jsonReader);
         JsonArray jsonArray = root.getAsJsonObject().get("menu").getAsJsonArray();
         return jsonArray.get(0);
@@ -189,7 +189,7 @@ public class GsonPerfTestWithCustomReader {
     
     @Benchmark
     public JsonElement getLastElementInMemory() {
-        CustomJSONStreamReader jsonReader = new CustomJSONStreamReader(new StringReader(json), requiredElements);
+        JSONStreamReader jsonReader = new JSONStreamReader(new StringReader(json), requiredElements);
         JsonElement root = new JsonParser().parse(jsonReader);
         JsonArray jsonArray = root.getAsJsonObject().get("menu").getAsJsonArray();
         return jsonArray.get(jsonArray.size() - 1);
@@ -197,7 +197,7 @@ public class GsonPerfTestWithCustomReader {
     
     @Benchmark
     public JsonElement getNthElementInMemory() {
-        CustomJSONStreamReader jsonReader = new CustomJSONStreamReader(new StringReader(json), requiredElements);
+        JSONStreamReader jsonReader = new JSONStreamReader(new StringReader(json), requiredElements);
         JsonElement root = new JsonParser().parse(jsonReader);
         JsonArray jsonArray = root.getAsJsonObject().get("menu").getAsJsonArray();
         return jsonArray.get(n);

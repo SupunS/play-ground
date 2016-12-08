@@ -32,83 +32,96 @@ public class JsonReaderTest {
         
         byte[] encoded = Files.readAllBytes(Paths.get("/home/supun/Desktop/json-samples/small-sample.json"));
         String json = new String(encoded, "UTF-8");
-        String [] requiredElements = new String[]{"//id", "//menu/meta/calories", "//status", "//menu/address"};
+        String [] requiredElements = new String[]{"//id", "//menu/meta/calories", "//status"};
         
-        while (true) {
-            CustomJSONStreamReader customJsonReader = new CustomJSONStreamReader(new StringReader(json), requiredElements);
+            JSONStreamReader customJsonReader = new JSONStreamReader(new StringReader(json), requiredElements);
 //             JsonReader customJsonReader = new JsonReader(new StringReader(json));
             // handleElement(customJsonReader);
 
-            JsonParser jp = new JsonParser();
-            JsonElement element = jp.parse(customJsonReader);
-        }
+/*            JsonParser jp = new JsonParser();
+            JsonElement element = jp.parse(customJsonReader);*/
         
 //        System.out.println(element);
         
-        /*customJsonReader.beginObject();
         System.out.println(customJsonReader.peek());
+        customJsonReader.beginObject();
+        System.out.println("begin object");
+            System.out.println("\n" + customJsonReader.peek());
             System.out.println(customJsonReader.nextName());
-            System.out.println(customJsonReader.peek());
+            System.out.println("\n" + customJsonReader.peek());
             System.out.println(customJsonReader.nextString());
-            System.out.println(customJsonReader.peek());
+            System.out.println("\n" + customJsonReader.peek());
             System.out.println(customJsonReader.nextName());
-            System.out.println(customJsonReader.peek());
+            System.out.println("\n" + customJsonReader.peek());
             customJsonReader.beginArray();
-            System.out.println(customJsonReader.peek());
-            
+            System.out.println("begin array");
+                System.out.println("\n" + customJsonReader.peek());
                 customJsonReader.beginObject();
-                System.out.println(customJsonReader.peek());
+                System.out.println("begin object");
+                System.out.println("\n" + customJsonReader.peek());
                     System.out.println(customJsonReader.nextName());
-                    System.out.println(customJsonReader.peek());
+                    System.out.println("\n" + customJsonReader.peek());
                     customJsonReader.beginObject();
-                    System.out.println(customJsonReader.peek());
+                    System.out.println("begin object");
+                    System.out.println("\n" + customJsonReader.peek());
                         System.out.println(customJsonReader.nextName());
-                        System.out.println(customJsonReader.peek());
+                        System.out.println("\n" + customJsonReader.peek());
                         System.out.println(customJsonReader.nextInt());
-                        System.out.println(customJsonReader.peek());
+                        
+                    System.out.println("\n" + customJsonReader.peek());
                     customJsonReader.endObject();
-                    System.out.println(customJsonReader.peek());
+                    System.out.println("end object");
+                    
+                System.out.println("\n" + customJsonReader.peek());
                 customJsonReader.endObject();
-                System.out.println(customJsonReader.peek());
-                
+                System.out.println("end object");
+                System.out.println("\n" + customJsonReader.peek());
                 customJsonReader.beginObject();
-                System.out.println(customJsonReader.peek());
+                System.out.println("begin object");
+                    System.out.println("\n" + customJsonReader.peek());
                     System.out.println(customJsonReader.nextName());
-                    System.out.println(customJsonReader.peek());
+                    System.out.println("\n" + customJsonReader.peek());
                     customJsonReader.beginObject();
-                    System.out.println(customJsonReader.peek());
+                    System.out.println("begin object");
+                        System.out.println("\n" + customJsonReader.peek());
                         System.out.println(customJsonReader.nextName());
-                        System.out.println(customJsonReader.peek());
+                        System.out.println("\n" + customJsonReader.peek());
                         System.out.println(customJsonReader.nextInt());
-                        System.out.println(customJsonReader.peek());
+                    System.out.println("\n" + customJsonReader.peek());
                     customJsonReader.endObject();
-                    System.out.println(customJsonReader.peek());
+                    System.out.println("end object");
+                System.out.println("\n" + customJsonReader.peek());
                 customJsonReader.endObject();
-                System.out.println(customJsonReader.peek());
-                
+                System.out.println("end object");
+                System.out.println("\n" + customJsonReader.peek());
                 customJsonReader.beginObject();
-                System.out.println(customJsonReader.peek());
+                System.out.println("begin object");
+                    System.out.println("\n" + customJsonReader.peek());
                     System.out.println(customJsonReader.nextName());
-                    System.out.println(customJsonReader.peek());
+                    System.out.println("\n" + customJsonReader.peek());
                     customJsonReader.beginObject();
-                    System.out.println(customJsonReader.peek());
+                    System.out.println("begin object");
+                        System.out.println("\n" + customJsonReader.peek());
                         System.out.println(customJsonReader.nextName());
-                        System.out.println(customJsonReader.peek());
+                        System.out.println("\n" + customJsonReader.peek());
                         System.out.println(customJsonReader.nextInt());
-                        System.out.println(customJsonReader.peek());
+                    System.out.println("\n" + customJsonReader.peek());
                     customJsonReader.endObject();
-                    System.out.println(customJsonReader.peek());
+                    System.out.println("end object");
+                System.out.println("\n" + customJsonReader.peek());
                 customJsonReader.endObject();
-                System.out.println(customJsonReader.peek());
+                System.out.println("end object");
+            System.out.println("\n" + customJsonReader.peek());
             customJsonReader.endArray();
-            System.out.println(customJsonReader.peek());
-            
+            System.out.println("end array");
+            System.out.println("\n" + customJsonReader.peek());
             System.out.println(customJsonReader.nextName());
-            System.out.println(customJsonReader.peek());
+            System.out.println("\n" + customJsonReader.peek());
             System.out.println(customJsonReader.nextString());
-            System.out.println(customJsonReader.peek());
+        System.out.println("\n" + customJsonReader.peek());
         customJsonReader.endObject();
-        System.out.println(customJsonReader.peek());*/
+        System.out.println("end object");
+        System.out.println(customJsonReader.peek());
         
         /*customJsonReader.beginObject();
         System.out.println(customJsonReader.peek());*/

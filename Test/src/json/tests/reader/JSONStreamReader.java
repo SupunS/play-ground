@@ -25,7 +25,7 @@ import java.io.Reader;
 /**
  * A custom JSON reader, which reads only a set of elements, from a JSON stream.
  */
-public class CustomJSONStreamReader extends JsonReader {
+public class JSONStreamReader extends JsonReader {
     
     // Name of the current element, if its a 'NAME' token
     private String currentElementName = null;
@@ -35,7 +35,7 @@ public class CustomJSONStreamReader extends JsonReader {
     
     // A stack of elements, to maintain the hierarchy of the current element.
     // Using a custom stack implementation for performance gain
-    private CustomStack elementsStack = new CustomStack(10);
+    private ElementStack elementsStack = new ElementStack(10);
     
     // Elements to be retained when reading
     private String [] requiredElements;
@@ -63,7 +63,7 @@ public class CustomJSONStreamReader extends JsonReader {
      * @param in                Reader
      * @param requiredElements  Array of elements to be retained
      */
-    public CustomJSONStreamReader(Reader in, String[] requiredElements) {
+    public JSONStreamReader(Reader in, String[] requiredElements) {
         super(in);
         this.requiredElements = requiredElements;
     }
@@ -221,7 +221,7 @@ public class CustomJSONStreamReader extends JsonReader {
     @Override
     public double nextDouble() throws IOException {
         if (this.currentToken == JsonToken.NUMBER) {
-            double tempElementValue = (double) this.currentElementValue;
+            double tempElementValue = Double.parseDouble((String) this.currentElementValue);
             goToNextToken(false, false);
             return tempElementValue;
         } else {
@@ -235,7 +235,7 @@ public class CustomJSONStreamReader extends JsonReader {
     @Override
     public long nextLong() throws IOException {
         if (this.currentToken == JsonToken.NUMBER) {
-            long tempElementValue = (long) this.currentElementValue;
+            long tempElementValue = Long.parseLong((String) this.currentElementValue);
             goToNextToken(false, false);
             return tempElementValue;
         } else {
@@ -249,7 +249,7 @@ public class CustomJSONStreamReader extends JsonReader {
     @Override
     public int nextInt() throws IOException {
         if (this.currentToken == JsonToken.NUMBER) {
-            int tempElementValue = (int) this.currentElementValue;
+            int tempElementValue = Integer.parseInt((String) this.currentElementValue);
             goToNextToken(false, false);
             return tempElementValue;
         } else {
@@ -325,7 +325,7 @@ public class CustomJSONStreamReader extends JsonReader {
                     skip = !isRequired(this.currentElementName);
                     
                     // Whenever a element name is read, add it to the stack.
-                    this.elementsStack.push(this.currentElementName);
+                    this.elementsStack.push(new JsonElement(this.currentElementName, null));
                     this.isNextObjectAnonymous = false;
 
                     if (!skip) {
@@ -337,7 +337,7 @@ public class CustomJSONStreamReader extends JsonReader {
                     if (!skip) {
                         /*
                          * Number can be int/long/double. hence reading it as string, and then parsing it 
-                         * to the corresponding type, during #nextString() method.
+                         * to the corresponding type, during #next****() method.
                          */
                         this.currentElementValue = super.nextString();
                         return;
@@ -368,6 +368,17 @@ public class CustomJSONStreamReader extends JsonReader {
             }
             isStartElement = false;
         }
+        
+        // when exiting the current element, set the current token type to END_OBJECT/END_ARRAY
+        if (!this.elementsStack.isEmpty()) {
+            ElementType startedElementType = this.elementsStack.peek().getType();
+            if (startedElementType == ElementType.OBJECT) {
+                this.currentToken = JsonToken.END_OBJECT;
+            } else if (startedElementType == ElementType.ARRAY) {
+                this.currentToken = JsonToken.END_ARRAY;
+            }
+        }
+        
         this.hasNext = false;
     }
     
@@ -382,9 +393,16 @@ public class CustomJSONStreamReader extends JsonReader {
      */
     private void handleObject(boolean skip, boolean isStartElement) throws IOException {
         if (isStartElement) {
+            // if the object is anonymous, then add it to the stack
             if (this.isNextObjectAnonymous) {
-                this.elementsStack.push(ANONYMOUS);
+                this.elementsStack.push(new JsonElement(ANONYMOUS, ElementType.OBJECT));
+            } else {
+                // if the object is a named-object, then that element is already added to the stack during 'NAME' block. 
+                // Hence pop it from stack and re-add it with the element-type.
+                this.elementsStack.pop();
+                this.elementsStack.push(new JsonElement(this.currentElementName, ElementType.OBJECT));
             }
+            
             super.beginObject();
             this.isNextObjectAnonymous = true;
             goToNextToken(skip, false);
@@ -402,8 +420,14 @@ public class CustomJSONStreamReader extends JsonReader {
     */
    private void handleArray(boolean skip, boolean isStartElement) throws IOException {
        if (isStartElement) {
+           // if the array is anonymous, then add it to the stack
            if (this.isNextObjectAnonymous) {
-               this.elementsStack.push(ANONYMOUS);
+               this.elementsStack.push(new JsonElement(ANONYMOUS, ElementType.ARRAY));
+           } else {
+               // if the array is a named-array, then that element is already added to the stack during 'NAME' block. 
+               // Hence pop it from stack and re-add it with the element-type.
+               this.elementsStack.pop();
+               this.elementsStack.push(new JsonElement(this.currentElementName, ElementType.ARRAY));
            }
            super.beginArray();
            this.isNextObjectAnonymous = true;
@@ -450,17 +474,18 @@ public class CustomJSONStreamReader extends JsonReader {
         
         /*
          *  Using string-concat over string builder here, as it is better in performance for 
-         *  concatenating fewer items (five or less items). Here it would concat only five or 
-         *  less items (i.e: five or less named-element levels in the json) for most cases.
+         *  concatenating fewer items. Here the number of items to concat is equal to the depth of the
+         *  json element in the element hierarchy, which is a low value (less than 10) for most cases.
          */
         String elementPath = SEPARATOR;
-        for (String jsonElement : this.elementsStack.toArray()) {
-            if (jsonElement!= null && !jsonElement.equals(ANONYMOUS)) {
-                elementPath = elementPath + SEPARATOR + jsonElement;
+        for (JsonElement jsonElement : this.elementsStack.toArray()) {
+            if (jsonElement != null && !jsonElement.getName().equals(ANONYMOUS)) {
+                elementPath = elementPath + SEPARATOR + jsonElement.getName();
             }
         }
         elementPath = elementPath + SEPARATOR + element;
         
+        // check whether this element is in the required-list
         for (String reqiredElement : this.requiredElements) {
             if (reqiredElement.startsWith(elementPath) || elementPath.startsWith(reqiredElement)) {
                 return true;
