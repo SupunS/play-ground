@@ -13,23 +13,56 @@ import java.io.IOException;
 public class TestASM {
 
     private static final String SOURCE_FILE_NAME = "ballerina/test.bal";
+    private static final String BAL_SOURCE_INTERFACE = "test/BalSource";
     private static final String CLASS_NAME = "test/BazImpl";
-    private static final String VAR_1 = "var1";
-    private static final String VAR_2 = "var2";
+    private static final String VAR_1 = "a";
+    private static final String VAR_2 = "b";
+    private static final String IO_PRINTLN = "org/ballerinalang/stdlib/io/nativeimpl/PrintlnAny";
 
     public static void main(String[] args) throws Exception {
-        
         /*
-         * Generated output:
+         * ballerina source:
+         * -----------------
          * 
-         * public int foo(int a, int b) {
-         *     ...
-         *     bar();
+         * function main(int a, int b) returns int {
+         *     return bar(a, b);
+         * }
+         * 
+         * public bar(int a, int b) returns int {
+         *     io:println(a);
+         *     io:println(b);
+         *     a = a + b;
+         *     panic error();
          *     ...
          * }
          * 
+         */
+
+        byte[] bytes = generateClass();
+        DynamicClassLoader loader = new DynamicClassLoader();
+        Class<?> clazz = loader.defineClass("test.BazImpl", bytes);
+        BalSource balFile = (BalSource) clazz.newInstance();
+
+        // Class<?> clazz = TestASM.class.getClassLoader().loadClass(CLASS_NAME);
+        // BalSource calc = (BalSource) clazz.newInstance();
+
+        // Run the main function
+        int a = 2, b = 5;
+        balFile.main(a, b);
+    }
+
+    private static byte[] generateClass() {
+        /*
+         * Generated output (.class):
+         * --------------------------
+         * 
+         * public int main(int a, int b) {
+         *     bar(a, b);
+         * }
+         * 
          * public int bar(int a, int b) {
-         *     ...
+         *     io:println();
+         *     a = a + b;
          *     throw new Exception();
          *     ...
          * }
@@ -38,8 +71,9 @@ public class TestASM {
 
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, CLASS_NAME, null, "java/lang/Object",
-                new String[] { "test/Baz" });
+                new String[] { BAL_SOURCE_INTERFACE });
         cw.visitSource(SOURCE_FILE_NAME, null);
+
 
         // Constructor
         MethodVisitor con = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
@@ -55,13 +89,21 @@ public class TestASM {
             MethodVisitor mv2 = cw.visitMethod(Opcodes.ACC_PUBLIC, "bar", "(II)I", null, null);
             mv2.visitCode();
 
+            // Print to std out
+            mv2.visitVarInsn(Opcodes.ILOAD, 1);
+            mv2.visitMethodInsn(Opcodes.INVOKESTATIC, IO_PRINTLN, "exec", "(I)V", false);
+            mv2.visitVarInsn(Opcodes.ILOAD, 2);
+            mv2.visitMethodInsn(Opcodes.INVOKESTATIC, IO_PRINTLN, "exec", "(I)V", false);
+
+            // var1 = var1 + var2
             Label l0 = addLineNumber(mv2, 4);
-            mv2.visitVarInsn(Opcodes.ILOAD, 1);          // Load var1 value onto stack
-            mv2.visitVarInsn(Opcodes.ILOAD, 2);          // Load var2 value onto stack
-            mv2.visitInsn(Opcodes.IADD);                 // Integer add from stack and push to stack
+            mv2.visitVarInsn(Opcodes.ILOAD, 1);
+            mv2.visitVarInsn(Opcodes.ILOAD, 2);
+            mv2.visitInsn(Opcodes.IADD);
+            mv2.visitVarInsn(Opcodes.ISTORE, 1);
 
             // Throw an exception
-            Label l1 = addLineNumber(mv2, 12);
+            addLineNumber(mv2, 12);
             String exClass = Type.getInternalName(Exception.class);
             mv2.visitTypeInsn(Opcodes.NEW, exClass);
             mv2.visitInsn(Opcodes.DUP);
@@ -70,7 +112,7 @@ public class TestASM {
 
             Label l2 = addLineNumber(mv2, 15);
             mv2.visitInsn(Opcodes.IRETURN);
-            mv2.visitMaxs(2, 3);
+            mv2.visitMaxs(-1, -1);
 
             // Add local variable names
             mv2.visitLocalVariable("this", "L" + CLASS_NAME + ";", null, l0, l2, 0);
@@ -82,19 +124,19 @@ public class TestASM {
 
         // foo() function definition
         {
-            MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "foo", "(II)I", null, null);
+            MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "main", "(II)I", null, null);
             mv.visitCode();
-            
+
             // Invoke the innerAdd() method
             Label l0 = addLineNumber(mv, 4);
             mv.visitVarInsn(Opcodes.ALOAD, 0);          // Load "this" onto the stack
             mv.visitVarInsn(Opcodes.ILOAD, 1);          // Load int value onto stack
             mv.visitVarInsn(Opcodes.ILOAD, 2);          // Load int value onto stack
             mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "test/BazImpl", "bar", "(II)I", false);
-            
+
             Label l1 = addLineNumber(mv, 5);            // Add line number information
             mv.visitInsn(Opcodes.IRETURN);              // Return integer from top of stack
-            mv.visitMaxs(2, 3);                         // Specify max stack and local vars
+            mv.visitMaxs(-1, -1);                         // Specify max stack and local vars
 
             // Add local var names
             mv.visitLocalVariable("this", "Ltest/BazImpl;", null, l0, l1, 0);
@@ -104,21 +146,16 @@ public class TestASM {
             mv.visitEnd();
         }
 
-        cw.visitEnd();                              // Finish the class definition
+        // Finish the class definition
+        cw.visitEnd();
 
-        DynamicClassLoader loader = new DynamicClassLoader();
         byte[] bytes = cw.toByteArray();
         writeClazz("aaa.class", bytes);
-        Class<?> clazz = loader.defineClass("test.BazImpl", bytes);
-        Baz calc = (Baz) clazz.newInstance();
-
-        int a = 2, b = 5;
-        int c = calc.foo(a, b);
-        System.out.println(a + " + " + b + " = " + c);
+        return bytes;
     }
 
     private static void writeClazz(String name, byte[] bytes) {
-        String filePath = "/Users/supun/eclipse-photon-workspace/test/src/test/resources" + File.separator + name;
+        String filePath = "." + File.separator + name;
         File file = new File(filePath);
         file.getParentFile().mkdirs();
         try (FileOutputStream fos = new FileOutputStream(filePath)) {

@@ -12,5 +12,23 @@
 			<artifactId>asm</artifactId>
 			<version>5.0.3</version>
 		</dependency>
+		<dependency>
+			<groupId>org.ballerinalang</groupId>
+			<artifactId>ballerina-io</artifactId>
+			<version>0.990.3-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
